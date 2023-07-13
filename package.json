@@ -1,0 +1,33 @@
+{
+  "name": "azure-computer-vision-wrapper",
+  "version": "1.0.1",
+  "description": "A JavaScript / TypeScript wrappper library for the Azure Computer Vision API for demo purposes",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx tsc && node dist/index.js",
+    "dev": "npx tsc && node dist/dev.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/denizdsh/azure-computer-vision-wrapper.git"
+  },
+  "keywords": [
+    "javascript",
+    "typescript",
+    "node",
+    "node.js",
+    "azure",
+    "computervision",
+    "cognitiveservices"
+  ],
+  "author": "denizdsh",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/denizdsh/azure-computer-vision-wrapper/issues"
+  },
+  "homepage": "https://github.com/denizdsh/azure-computer-vision-wrapper#readme",
+  "devDependencies": {
+    "typescript": "^5.1.6"
+  }
+}
