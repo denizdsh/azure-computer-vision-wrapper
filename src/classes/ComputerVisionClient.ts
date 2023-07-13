@@ -1,8 +1,12 @@
 import Util from "./Util";
+import AnalyzeImageParameters from "../interfaces/AnalyzeImage/AnalyzeImageParameters";
 import AzureConfig from "../interfaces/AzureConfig";
 import ReadParameters from "../interfaces/Read/ReadParameters";
 import ReadResult from "../interfaces/Read/ReadResult";
 import ClientNotInitializedError from "./errors/ClientNotInitializedError";
+import AnalyzeImageResult from "../interfaces/AnalyzeImage/AnalyzeImageResult";
+
+const CV_VERSION = "v3.2";
 
 class ComputerVisionClient {
   private _azureConfig?: AzureConfig;
@@ -26,6 +30,11 @@ class ComputerVisionClient {
     return this._azureConfig;
   }
 
+  private set azureConfig(config: AzureConfig) {
+    this._azureConfig = config;
+    this._msEndpoint = `https://${this._azureConfig.endpoint}/vision/${CV_VERSION}`;
+  }
+
   private get msEndpoint(): string {
     if (!this._msEndpoint) {
       throw new ClientNotInitializedError();
@@ -34,9 +43,11 @@ class ComputerVisionClient {
     return this._msEndpoint;
   }
 
-  private set azureConfig(config: AzureConfig) {
-    this._azureConfig = config;
-    this._msEndpoint = `https://${this._azureConfig.endpoint}/vision/v3.2/read/analyze`;
+  private getUrlWithParams<ParamsType extends {}>(
+    endpoint: string,
+    params?: ParamsType
+  ): URL {
+    return Util.getUrlWithParams([this.msEndpoint, endpoint], params);
   }
 
   private async fetch(
@@ -69,13 +80,7 @@ class ComputerVisionClient {
     imageUrl: string,
     params?: ReadParameters
   ): Promise<{ operationLocation: string; res: Response }> {
-    const endpoint = new URL(this.msEndpoint);
-
-    if (params) {
-      Object.entries(params).forEach((p) =>
-        endpoint.searchParams.append(p[0], p[1])
-      );
-    }
+    const endpoint = this.getUrlWithParams("/read/analyze", params);
 
     const res = await this.fetch(endpoint, {
       method: "POST",
@@ -107,6 +112,15 @@ class ComputerVisionClient {
     const operationLocation = (await this.requestRead(imageUrl, params))
       .operationLocation;
     return await this.getReadResult(operationLocation);
+  }
+
+  public async analyzeImage(imageUrl: string, params?: AnalyzeImageParameters) {
+    const endpoint = this.getUrlWithParams("/analyze", params);
+
+    return await this.fetchJSON(endpoint, {
+      method: "POST",
+      body: JSON.stringify({ url: imageUrl }),
+    });
   }
 }
 

@@ -11,5 +11,5 @@ export default interface ReadParameters
   /**
    * @param readingOrder Optional parameter to specify which reading order algorithm should be applied when ordering the extract text elements. Can be either 'basic' or 'natural'. Will default to basic if not specified
    */
-  readingOrder?: string;
+  readingOrder?: "basic" | "natural";
 }
