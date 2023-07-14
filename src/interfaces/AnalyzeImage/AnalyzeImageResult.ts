@@ -2,11 +2,12 @@ import { ClipartType } from "../../enums/ClipartType";
 import { LineDrawingType } from "../../enums/LineDrawingType";
 
 import ComputerVisionFace from "../common/ComputerVisionFace";
+import ImageResultBase from "../common/ImageResultBase";
 import NameConfidenceObject from "../common/NameConfidenceObject";
 import TextConfidenceObject from "../common/TextConfidenceObject";
 import AnalyzeImageCategory from "./AnalyzeImageCategory";
 
-export default interface AnalyzeImageResult {
+export default interface AnalyzeImageResult extends ImageResultBase {
   categories: AnalyzeImageCategory[];
   adult?: {
     isAdultContent: boolean;
@@ -21,13 +22,6 @@ export default interface AnalyzeImageResult {
     tags: string[];
     captions: TextConfidenceObject[];
   };
-  requestId: string;
-  metadata: {
-    width: number;
-    height: number;
-    format: string;
-  };
-  modelVersion: string;
   faces?: ComputerVisionFace[];
   color?: {
     dominantColorForeground: string;

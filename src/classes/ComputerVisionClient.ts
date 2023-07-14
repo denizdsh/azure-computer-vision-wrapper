@@ -5,6 +5,8 @@ import ReadParameters from "../interfaces/Read/ReadParameters";
 import ReadResult from "../interfaces/Read/ReadResult";
 import ClientNotInitializedError from "./errors/ClientNotInitializedError";
 import AnalyzeImageResult from "../interfaces/AnalyzeImage/AnalyzeImageResult";
+import DescribeImageParameters from "../interfaces/DescribeImage/DescribeImageParameters";
+import DescribeImageResult from "../interfaces/DescribeImage/DescribeImageResult";
 
 const CV_VERSION = "v3.2";
 
@@ -114,10 +116,25 @@ class ComputerVisionClient {
     return await this.getReadResult(operationLocation);
   }
 
-  public async analyzeImage(imageUrl: string, params?: AnalyzeImageParameters) {
+  public async analyzeImage(
+    imageUrl: string,
+    params?: AnalyzeImageParameters
+  ): Promise<AnalyzeImageResult> {
     const endpoint = this.getUrlWithParams("/analyze", params);
 
-    return await this.fetchJSON(endpoint, {
+    return await this.fetchJSON<AnalyzeImageResult>(endpoint, {
+      method: "POST",
+      body: JSON.stringify({ url: imageUrl }),
+    });
+  }
+
+  public async describeImage(
+    imageUrl: string,
+    params?: DescribeImageParameters
+  ): Promise<DescribeImageResult> {
+    const endpoint = this.getUrlWithParams("/describe", params);
+
+    return await this.fetchJSON<DescribeImageResult>(endpoint, {
       method: "POST",
       body: JSON.stringify({ url: imageUrl }),
     });
